@@ -32,8 +32,8 @@ select
 
 from {{ source('staging', 'flights_delay_external_table') }}
 -- dbt build --m <model.sql> --var 'is_test_run: false'
-{% if var('is_test_run', default=true) %}
+-- {% if var('is_test_run', default=true) %}
 
-    limit 100
+--     limit 100
 
-{% endif %}
+-- {% endif %}
