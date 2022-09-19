@@ -1,0 +1,82 @@
+version: 2
+
+sources:
+    - name: staging
+      database: airplane-flights-delay-project
+      schema: flight_delay_dataset
+    
+      tables:
+        - name: flights_delay_external_table
+
+models:
+  - name: airline_delay
+    description: >
+      A flight is considered delayed if it arrived at (or departed) 
+      the gate 15 minutes or more after the scheduled arrival (departure) time.
+      The information is based on data submitted by reporting carriers. The number of 
+      reporting carriers varies.
+    columns:
+        - name: year
+          description: Year of the reported data
+        - name: month
+          description: Month of the reported flight data
+          tests:
+            - accepted_values:
+                values: "{{ var('month_values') }}"
+                severity: warn
+                quote: true
+        - name: city
+          description: City of the airport where flight arrived or departed
+        - name: state
+          description: State of the airport where flight arrived or departed
+          tests:
+            - accepted_values:
+                values: "{{ var('state_values') }}"
+                severity: warn
+                quote: true
+        - name: carrier_code
+          description: Alphanumeric unique code for each carrier
+        - name: carrier_name
+          description: Airline carrier name
+        - name: airport_code
+          description: Alphanumeric unique code for each airport
+        - name: arr_flights
+          description: Number of flights which arrived at the airport
+        - name: arr_delays_ct
+          description: Number of flights delayed
+        - name: carrier_del_ct
+          description: >
+            Number of flights delayed due to air carrier 
+            (Crew problems, cleaning, baggage loading, fueling, etc.)
+        - name: weather_del_ct
+          description: Number of flights delayed due to weather conditions
+        - name: nas_del_ct
+          description: > 
+            Number of flights delayed due to National Aviation System 
+            (Heavy traffic volume, air traffic control, etc.)
+        - name: security_del_ct
+          description: >
+            Number of flights delayed due to security 
+            (Evacuation of a terminal or concourse, re-boarding of aircraft 
+            because of security breach, etc.)
+        - name: late_aircraft_ct
+          description: Number of flights delayed due to a previous flight using the same aircraft being late
+        - name: arr_cancelled
+          description: Number of cancelled flights
+        - name: arr_diverted
+          description: Number of diverted flights
+        - name: arr_delay_mins
+          description: Total time (minutes) of delayed flights
+        - name: carrier_del_mins
+          description: Total time (minutes) of delayed flights due to air carrier
+        - name: weather_del_mins
+          description: Total time (minutes) of delayed flights due to weather
+        - name: nas_del_mins
+          description: Total time (minutes) of delayed flights due to National Aviation System
+        - name: security_del_mins
+          description: Total time (minutes) of delayed flights due to security
+        - name: late_aircraft_del_mins
+          description: >
+            Total time (minutes) of delayed flights due to a previous flight using the same
+            aircraft being late
+        
