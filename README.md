@@ -1,5 +1,8 @@
 # Airline-Delay-Data
-Airline On-Time Statistics and Delay Causes Data (2003-2022)
+Airline On-Time Statistics and Delay Causes Data (June 2003- March 2022)
+
+**The dashboard for visualizing the data from the pipeline below can be viewed [here](https://datastudio.google.com/reporting/d78f135e-0458-4614-b6b8-0294716ab164)**
+
 
 # Overview
 Starting in 2003, the Bureau of Transportation Statistics (BTS) began recording the causes of flight delays as reported by various airline carriers. The goal of this project is to create a data pipeline to download this flight delay data, save it to a Data Warehouse and finally perform analysis to visualize the data using Google Data Studio. 
@@ -126,6 +129,6 @@ dbt Cloud will be used for the final data transformation and for writing the dat
 
 ### Google Data Studio
 
-After using dbt Cloud to write the data to your production dataset, it is time to visualize the data. The final dashboard contains 2 pages and can contains several dropdown fields on each page such as ```State``` and ```Carrier```.  From the data it is clear that California and Florida have the most delayed flights and that during the pandemic of 2020 there was an estimated 2 million fewer flights compared to 2019.  It should be noted that although the amount of minutes of flights delay cause by weather is significantly lower than that of the other fields, this is not the true value for this field. As [per the BTS](https://www.bts.gov/topics/airlines-and-airports/understanding-reporting-causes-flight-delays-and-cancellations) the field of weather delays consists of extreme weather that prevents flying. There is another category of weather within the NAS category. This type of weather slows the operations of the system but does not prevent flying. 
+After using dbt Cloud to write the data to your production dataset, it is time to visualize the data. The final **[dashboard](https://datastudio.google.com/reporting/d78f135e-0458-4614-b6b8-0294716ab164)** contains 2 pages and can contains several dropdown fields on each page such as ```State``` and ```Carrier```.  From the data it is clear that California and Florida have the most delayed flights and that during the pandemic of 2020 there was an estimated 2 million fewer flights compared to 2019.  The Airline with the most delayed flights is Southwest Airlines with over 4 million delayed flights from 2003 to 2022. It should be noted that although the amount of minutes of flights delay cause by weather is significantly lower than that of the other fields, this is not the true value for this field. As [per the BTS](https://www.bts.gov/topics/airlines-and-airports/understanding-reporting-causes-flight-delays-and-cancellations) the field of weather delays consists of extreme weather that prevents flying. There is another category of weather within the NAS category and this type of weather slows the operations of the system but does not prevent flying. 
 
 ![alt dashboard](https://github.com/Raatid-Dilly/Airline-Delay-Data/blob/main/images/Airline_On-Time_Statistics_and_Delays%20(1).jpg)
