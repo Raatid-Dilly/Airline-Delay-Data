@@ -126,6 +126,6 @@ dbt Cloud will be used for the final data transformation and for writing the dat
 
 ### Google Data Studio
 
-After using dbt Cloud to write the data to your production dataset, it is time to visualize the data. 
+After using dbt Cloud to write the data to your production dataset, it is time to visualize the data. The final dashboard contains 2 pages and can contains several dropdown fields on each page such as ```State``` and ```Carrier```.  From the data it is clear that California and Florida have the most delayed flights and that during the pandemic of 2020 there was an estimated 2 million fewer flights compared to 2019.  It should be noted that although the amount of minutes of flights delay cause by weather is significantly lower than that of the other fields, this is not the true value for this field. As [per the BTS](https://www.bts.gov/topics/airlines-and-airports/understanding-reporting-causes-flight-delays-and-cancellations) the field of weather delays consists of extreme weather that prevents flying. There is another category of weather within the NAS category. This type of weather slows the operations of the system but does not prevent flying. 
 
-
+![alt dashboard](https://github.com/Raatid-Dilly/Airline-Delay-Data/blob/main/images/Airline_On-Time_Statistics_and_Delays%20(1).jpg)
