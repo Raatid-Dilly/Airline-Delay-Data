@@ -67,3 +67,65 @@ The .csv file contains the following columns
 **Data Visualization**
   * Google Data Studio - Used to visualize the data
 
+
+# Work
+### GCP Setup:
+
+To begin, you will need a Google Cloud Platform account or any cloud provide like AWS or Azure. This demonstration will focus on GCP.
+After creating a GCP account, create a new project with an unique Project ID (this Project ID will be reference by Terraform to create the data lake and data warehouse). Next you will need to setup service account and authentication for the project. Help on doing this can be found [here](https://cloud.google.com/docs/authentication/client-libraries). The following roles should be granted to the project:
+
+  - Storage Admin
+  - Storage Object Admin
+  - BigQuery Admin
+  - Viewer
+ 
+After granting the roles listed above to the account, download the service-account-keys .json file that will be needed for authentication. Additionally, download the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install-sdk) to develop locally through a CLI. Set an environment variable to point to the downloaded GCP .json authentication key like such:
+
+``` 
+export GOOGLE_APPLICATION_CREDENTIALS="<path-to-your-service-account-authkeys>.json"
+#Then enter
+gcloud auth application-default login
+```
+
+### Terraform:
+
+After the GCP account is setup and the authentication keys are downloaded, next is Terraform. Terraform is an open-source tool by HashiCorp used for provisioning infrastructure resources. The [IaC(Terraform)](https://github.com/Raatid-Dilly/Airline-Delay-Data/tree/main/IaC(Terraform)) folder contains the ```main.tf``` and ```variables.tf``` files which are essentially the configuration files for creating the resources.  [This](https://learn.hashicorp.com/collections/terraform/gcp-get-started) is a great resource for learning about using Terraform with Google Cloud. To execute Terraform commands, cd into the folder with a CLI and perform:
+
+- ```terraform init``` - To initialize the configuration
+- ```terraform plan``` - Matches/previews local changes against a remote state and proposes an execution plan (May need to specify GCP Project ID)
+- ```terraform apply``` - Applies the changes to the cloud (May need to specify GCP Project ID)
+- ```terraform destroy``` - Removes stack from the cloud
+
+### Apache Airflow:
+
+Now that the cloud resources were created by Terraform next is orchestrating the workflow with Airflow. First create an airflow folder and inside create folders called ```dags```, ```logs```, and ```plugins```. To run Airflow locally we will use Docker which require both a [Dockerfile](https://github.com/Raatid-Dilly/Airline-Delay-Data/blob/main/airflow/Dockerfile) and a [docker-compose.yaml](https://github.com/Raatid-Dilly/Airline-Delay-Data/blob/main/airflow/docker-compose.yaml) file. Both of these files should be in your airflow folder as well. The docker-compose.yaml file is the official airflow docker file but with additional variable for our needs such as the following:
+
+```
+ GOOGLE_APPLICATION_CREDENTIALS: <PATH TO YOUR GOOGLE APPLICATIONS CREDENTIALS .json FILE>
+ AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: 'google-cloud-platform://?extra__google_cloud_platform__key_path=<PATH TO YOUR GOOGLE APPLICATIONS CREDENTIALS .json FILE>'
+ GCP_PROJECT_ID: '<YOUR GCP PROJECT NAME/ID>' 
+ GCP_GCS_BUCKET: '<YOUR GCP GOOGLE CLOUD STORAGE DATA LAKE BUCKET NAME>'
+ volumes:
+   - ./dags:/opt/airflow/dags
+   - ./logs:/opt/airflow/logs
+   - ./plugins:/opt/airflow/plugins
+```
+
+To run Airflow ```cd <path-to-your-airflow-folder>``` and run the following shell commands:
+  - ```docker-compose build``` - Builds the docker image
+  - ```docker-compose up airflow-init``` - Initializes all the Airflow components
+  - ```docker-compose up -d``` - Starts all the services in the container and runs in detached mode so you can still use the terminal
+  
+To view the Airflow UI open a web browser and go to ```https://localhost:8080``` and enter ```airflow``` for both the username and password. The DAG that is listed in the [airflow/dags](https://github.com/Raatid-Dilly/Airline-Delay-Data/tree/main/airflow/dags) folder should be listed on the UI page. Simply run the DAG and wait for it to be finish. When complete the tasks that are described in the DAG should have all been executed and the airline delay data should now be in your GCS data lake and as an External Table in Google BigQuery. To stop Airflow, run the following in your terminal:
+
+  - ```docker-compose down```
+  
+### dbt Cloud:
+
+dbt Cloud will be used for the final data transformation and for writing the data to the production data warehouse.  A [dbt account](https://www.getdbt.com/signup/) is required and it will need to be connected to Google BigQuery. Follow this [tutorial](https://docs.getdbt.com/guides/getting-started/getting-set-up/setting-up-bigquery) to setup a connection between the two. The ```dbt/macros``` and ```dbt/models``` folders contain the code used to execute the transformations and all ```dbt``` files are [here](https://github.com/Raatid-Dilly/Airline-Delay-Data/tree/main/dbt).
+
+### Google Data Studio
+
+After using dbt Cloud to write the data to your production dataset, it is time to visualize the data. 
+
+
